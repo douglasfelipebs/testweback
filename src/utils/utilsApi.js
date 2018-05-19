@@ -7,7 +7,7 @@ const headers = {
 
 // Return all the categories
 export const getAllUsers = () =>
-    fetch(`${url}/api/user`, {
+    fetch(`/api/user`, {
         method: "GET",
         headers
     })
