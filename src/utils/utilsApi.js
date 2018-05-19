@@ -1,4 +1,4 @@
-const url = 'http://localhost:5000' || process.env.APP_URL;
+const url = 'http://localhost:5000' || process.env.APP_URL + ':' + process.env.PORT;
 
 const headers = {
     'Content-Type': 'application/json',
