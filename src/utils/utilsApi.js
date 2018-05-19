@@ -1,0 +1,15 @@
+const url = 'http://localhost:5000' || process.env.APP_URL;
+
+const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+}
+
+// Return all the categories
+export const getAllUsers = () =>
+    fetch(`${url}/api/user`, {
+        method: "GET",
+        headers
+    })
+        .then(res => res.json())
+        .then(data => data);
