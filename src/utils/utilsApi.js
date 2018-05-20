@@ -1,4 +1,4 @@
-const url = 'https://testewebpackrafilx.herokuapp.com:5000' || process.env.APP_URL + ':' + process.env.PORT;
+const url = 'https://testewebpackrafilx.herokuapp.com' || process.env.APP_URL + ':' + process.env.PORT;
 
 const headers = {
     'Content-Type': 'application/json',
