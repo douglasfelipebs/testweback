@@ -12,9 +12,21 @@ const DATABASE_URI='mongodb://oiler:123456abcde@ds251889.mlab.com:51889/bombeiro
 
 mongoose.connect(DATABASE_URI); // connect to our database
 
+var db = mongoose.connection;
+
+mongoose.set('debug', true);
+
+db.on('error', console.error.bind(console,'# Mongo DB: connection error:'));
+
 app.use(serveStatic(path.join(__dirname, 'dist')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+
+//develop
+//var cors = require('cors')
+
+//app.use(cors())
 
 router.use(function(req, res, next) {
     // do logging
@@ -43,11 +55,10 @@ router.route('/user')
 
     })
     .get(function(req, res) {
-        User.find(function(err, users) {
-            if (err)
-                res.send(err);
+        User.find((err, users) => {
+            if (err) return res.status(500).send(err)
 
-            res.json(users);
+            return res.status(200).send(json(users));
         });
     });
 

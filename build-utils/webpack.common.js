@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const config = {
     entry: {
-        vendor: ['semantic-ui-react']
+        vendor: ['babel-polyfill', 'semantic-ui-react']
     },
     output: {
         path: commonPaths.outputPath,
@@ -34,7 +34,7 @@ const config = {
         new HtmlWebpackPlugin({
             template: 'public/index.html',
             favicon: 'public/favicon.ico'
-        })
+        }),
     ]
 };
 module.exports = config;

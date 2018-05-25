@@ -1,18 +1,13 @@
 import React from 'react';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
+import { browserHistory } from 'react-router';
 import importedComponent from 'react-imported-component';
-
-import Home from './Home';
-import DynamicPage from './DynamicPage';
-import NoMatch from './NoMatch';
+import NavbarHeader from './NavbarHeader'
+import PanelsComponents from './PanelsComponents'
+import Sobre from './Sobre'
 import Loading from './Loading';
+import { AppCss } from './Layout.css'
 
-const AsyncDynamicPAge = importedComponent(
-    () => import(/* webpackChunkName:'DynamicPage' */ './DynamicPage'),
-    {
-        LoadingComponent: Loading
-    }
-);
 const AsyncNoMatch = importedComponent(
     () => import(/* webpackChunkName:'NoMatch' */ './NoMatch'),
     {
@@ -23,10 +18,17 @@ const AsyncNoMatch = importedComponent(
 const App = () => {
     return (
         <Router>
-            <div>
+            <div className={AppCss}>
+                <Route path='/' render={() => (
+                    <NavbarHeader />
+                )} />
                 <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/dynamic" component={AsyncDynamicPAge} />
+                    <Route exact path='/' render={() => (
+                        <PanelsComponents />
+                    )} />
+                    <Route exact path='/Sobre' render={() => (
+                        <Sobre />
+                    )} />
                     <Route component={AsyncNoMatch} />
                 </Switch>
             </div>
