@@ -5,7 +5,9 @@ import importedComponent from 'react-imported-component';
 import NavbarHeader from './NavbarHeader'
 import PanelsComponents from './PanelsComponents'
 import Sobre from './Sobre'
-import Loading from './Loading';
+import Dashboard from './Dashboard'
+import Loading from './Loading'
+import { sessionService } from 'redux-react-session'
 import { AppCss } from './Layout.css'
 
 const AsyncNoMatch = importedComponent(
@@ -19,8 +21,8 @@ const App = () => {
     return (
         <Router>
             <div className={AppCss}>
-                <Route path='/' render={() => (
-                    <NavbarHeader />
+                <Route path='/' render={(routerProps) => (
+                    <NavbarHeader props={routerProps}/>
                 )} />
                 <Switch>
                     <Route exact path='/' render={() => (
@@ -28,6 +30,9 @@ const App = () => {
                     )} />
                     <Route exact path='/Sobre' render={() => (
                         <Sobre />
+                    )} />
+                    <Route exact path='/Dashboard' onEnter={sessionService.checkAuth} render={() => (
+                        <Dashboard />
                     )} />
                     <Route component={AsyncNoMatch} />
                 </Switch>

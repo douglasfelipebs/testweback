@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux'
-import { sessionService } from 'redux-react-session';
+import { sessionService } from 'redux-react-session'
 import reducers from './reducers'
 import  thunk  from 'redux-thunk'
 import App from './components/App';
@@ -19,7 +19,12 @@ const store = createStore(
 )
 
 // Init the session service
-sessionService.initSessionService(store, { driver: 'COOKIES' });
+sessionService.initSessionService(store,
+    {
+        refreshOnCheckAuth: true,
+        driver: 'COOKIES',
+        redirectPath: "/"
+    });
 
 const render = Component =>
     ReactDOM.render(

@@ -29,13 +29,27 @@ app.use(bodyParser.json());
 //app.use(cors())
 
 router.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
     // do logging
     console.log('Something is happening.');
+
     next(); // make sure we go to the next routes and don't stop here
 });
 
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });
+    var user = new User();
+    user.id = 500
+    user.name = 'admin'
+    user.password = 'admin'
+    user.save((err) => {
+        if (err)
+            res.send(err);
+
+        res.json({ message: 'User created!' });
+    });
+//    res.json({ message: 'hooray! welcome to our api!' });
 })
 
 router.route('/user')
@@ -58,7 +72,8 @@ router.route('/user')
         User.find((err, users) => {
             if (err) return res.status(500).send(err)
 
-            return res.status(200).send(json(users));
+            res.header('Access-Control-Allow-Origin', '*')
+            return res.status(200).send(users);
         });
     });
 

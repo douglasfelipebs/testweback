@@ -1,2 +1,2 @@
 (window.webpackJsonp=window.webpackJsonp||[]).push([[0],{201:function(e,a,n){"use strict";n.r(a);var t=n(0),l=n.n(t),r=n(36),c=n(22),o=function(e){var a=e.children;return l.a.createElement(r.Container,null,l.a.createElement("a",{href:"/"},l.a.createElement(r.Header,{as:"h1",className:c.h1},"Bombeiros Ibirama")),a,l.a.createElement(r.Divider,null),l.a.createElement("p",{className:c.pullRight},"Made with a lot of ",l.a.createElement(r.Icon,{name:"coffee",color:"black"})," by, Rafilx Tenfen"))};a.default=function(){return l.a.createElement(o,null,l.a.createElement(r.Icon,{name:"minus circle",size:"big"}),l.a.createElement("strong",null,"Page not found!"))}}}]);
-//# sourceMappingURL=NoMatch.8e7c07c1adcb2e93be7d.js.map
+//# sourceMappingURL=NoMatch.38da60d820c598165c63.js.map

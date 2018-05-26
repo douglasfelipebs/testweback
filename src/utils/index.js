@@ -7,3 +7,9 @@ export default function removeAcento (text) {
     text = text.replace(new RegExp('[Ç]','gi'), 'c');
     return text;
 }
+
+export default function capitalize (str = '') {
+    return typeof str !== 'string'
+        ? ''
+        : str[0].toUpperCase() + str.slice(1)
+}

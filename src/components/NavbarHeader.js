@@ -2,29 +2,30 @@ import React, { Component } from 'react'
 import { Navbar, NavItem, Nav, NavDropdown, MenuItem, Modal, Button,
     FormGroup, ControlLabel, FormControl, HelpBlock} from 'react-bootstrap'
 import  swal  from 'sweetalert'
-import { bindActionCreators } from 'redux'
-import * as sessionActions from '../actions/session'
 import { connect } from 'react-redux'
-import { navBar } from './Layout.css'
+import Loading from './Loading'
+import { navBar, modalLoginOpacity } from './Layout.css'
+import {initLoginApi, logoutApi} from "../actions/session"
 
 class NavbarHeader extends Component {
 
-
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
 
         this.state = {
             ModalLogin: {
                 open: false,
                 user: '',
                 password: ''
-            }
+            },
+            loadingOpen: false
         }
 
         this.handleCloseModalLogin   = this.handleCloseModalLogin.bind(this)
         this.handleConfirmModalLogin = this.handleConfirmModalLogin.bind(this)
         this.handleChangeUser        = this.handleChangeUser.bind(this)
         this.handleChangePassword    = this.handleChangePassword.bind(this)
+        this.limpar                  = this.limpar.bind(this)
     }
 
 
@@ -32,20 +33,28 @@ class NavbarHeader extends Component {
     handleOnClickLogin = (e) => {
         e.preventDefault()
         this.setState({
+            loadingOpen: false,
             ModalLogin: {
                 ...this.state.ModalLogin,
                 open: true
             }
         })
     }
+
     handleOnClickLogout = (e) => {
         e.preventDefault()
-        const { logout } = this.props.actions;
+        debugger;
+
+        if (this.props.props.history.location.pathname.toLowerCase().indexOf('dashboard'))
+            this.props.props.history.push('/')
+
+        const { logout } = this.props
         logout();
     }
 
     handleCloseModalLogin() {
         this.setState({
+            loadingOpen: false,
             ModalLogin: {
                 ...this.state.ModalLogin,
                 open: false
@@ -55,17 +64,25 @@ class NavbarHeader extends Component {
 
     handleConfirmModalLogin(e) {
         e.preventDefault()
-        if ((this.getValidationStatePassword() && this.getValidationStatePassword()) === 'success'){
+
+        this.setState({loadingOpen: true})
+        let bCorreto = false;
+        if ((this.getValidationStatePassword() && this.getValidationStatePassword()) === 'success') {
             const user = {
                 user: this.state.ModalLogin.user,
                 password: this.state.ModalLogin.password
             }
-            const { login } = this.props.actions
-            login(user)
 
-        } else {
-            swal("Algo de errado aconteceu", "Verifique seu login e senha!", "error");
+            this.props.login(user)
+            bCorreto = true;
         }
+
+        if (!bCorreto) {
+            swal("Algo de errado aconteceu", "Verifique seu login e senha!", "error");
+        } else {
+            this.handleCloseModalLogin()
+        }
+
     }
 
     handleChangeUser(e) {
@@ -117,6 +134,7 @@ class NavbarHeader extends Component {
         let currentUrl = window.location.href
 
 
+
         return (
             <div className={navBar}>
                 <Navbar>
@@ -126,7 +144,7 @@ class NavbarHeader extends Component {
                         </Navbar.Brand>
                     </Navbar.Header>
                     <Nav pullRight>
-                        {(this.props.LoggedIn) &&
+                        {(this.props.logging) &&
                         <NavItem href='/Dashboard'
                                  active={(currentUrl.indexOf('Dashboard') !== -1)}
                         >
@@ -157,7 +175,7 @@ class NavbarHeader extends Component {
                                       active={(currentUrl.indexOf('Doacoes') !== -1)}
                             >Doações</MenuItem>
                         </NavDropdown>
-                        {(!this.props.LoggedIn)
+                        {(!this.props.logging)
                             ?
                             <NavItem
                                 onClick={(e) => this.handleOnClickLogin(e)}
@@ -176,7 +194,8 @@ class NavbarHeader extends Component {
                 <Modal
                     show={this.state.ModalLogin.open}
                     onHide={this.handleCloseModalLogin}
-                    onEntered={() => {this.inputUser.focus() } }
+                    className={(this.state.loadingOpen) && modalLoginOpacity}
+                    onEntered={() => {this.inputUser.focus()} }
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>Login</Modal.Title>
@@ -192,7 +211,7 @@ class NavbarHeader extends Component {
                                     value={this.state.ModalLogin.user}
                                     placeholder='Nome de Usuário'
                                     onChange={this.handleChangeUser}
-                                    inputRef={ref => { this.inputUser = ref}}
+                                    inputRef={ ref => this.inputUser = ref}
                                 />
                                 <HelpBlock>Mínimo de 4 caracteres</HelpBlock>
                             </FormGroup>
@@ -223,13 +242,14 @@ class NavbarHeader extends Component {
 
 function mapStateToProps (state) {
     return {
-        LoggedIn: false
+        logging: state.session.authenticated,
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(sessionActions, dispatch)
+        login  : (user) => dispatch(initLoginApi(user)),
+        logout : () => dispatch(logoutApi())
     };
 };
 

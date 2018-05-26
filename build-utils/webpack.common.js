@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const config = {
     entry: {
-        vendor: ['babel-polyfill', 'semantic-ui-react']
+        vendor: ['semantic-ui-react']
     },
     output: {
         path: commonPaths.outputPath,
