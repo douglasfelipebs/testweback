@@ -5,24 +5,18 @@ const DEFAULT_STATE = {
         id: '',
         name: '',
         password: ''
-    }
+    },
+    bombeirosVoluntarios: []
 };
 import {
-    LOGIN_ACCOUNT,
     LOGIN_INIT,
-    LOGOUT_USER
+    LOGOUT_USER,
+    NEW_VOLUNTARY
 } from "../actions/types"
 
 export const bombeiros = (state = DEFAULT_STATE, action) => {
 
     switch (action.type) {
-
-        case LOGIN_ACCOUNT: {
-            return {
-                ...state,
-                logged: action.bLoggedIn
-            }
-        }
 
         case LOGIN_INIT: {
             const { response } = action
@@ -50,6 +44,18 @@ export const bombeiros = (state = DEFAULT_STATE, action) => {
                     name: response.user.name,
                     password: response.user.password
                 }
+            }
+        }
+
+        case NEW_VOLUNTARY: {
+            const { response } = action
+            debugger;
+            console.log('Redux', JSON.stringify(response))
+            return {
+                ...state,
+                bombeirosVoluntarios: (!state.bombeirosVoluntarios.includes(response))
+                    ? state.bombeirosVoluntarios.concat(response)
+                    : state.bombeirosVoluntarios
             }
         }
 

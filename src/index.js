@@ -21,7 +21,7 @@ const store = createStore(
 // Init the session service
 sessionService.initSessionService(store,
     {
-        refreshOnCheckAuth: true,
+        refreshOnCheckAuth: false,
         driver: 'COOKIES',
         redirectPath: "/"
     });

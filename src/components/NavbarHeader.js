@@ -133,8 +133,6 @@ class NavbarHeader extends Component {
     render() {
         let currentUrl = window.location.href
 
-
-
         return (
             <div className={navBar}>
                 <Navbar>

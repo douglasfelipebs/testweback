@@ -7,34 +7,6 @@ import {
 } from "./types"
 
 
-export const login = (user) => {
-    return () => {
-        try {
-            sessionApi.getAllUsers()
-        } catch (e) {
-            console.log(e)
-        }
-        return sessionApi.login(user).then(response => {
-            const { token } = response;
-            sessionService.saveSession({ token })
-                .then(() => {
-                    sessionService.saveUser(response.data)
-                });
-        });
-    };
-};
-
-export const logout = () => {
-    return () => {
-        return sessionApi.logout().then(() => {
-            sessionService.deleteSession();
-            sessionService.deleteUser();
-        }).catch(err => {
-            throw (err);
-        });
-    };
-};
-
 
 export const dispatchLogout = (response) => ({
     type: LOGOUT_USER,
@@ -78,7 +50,7 @@ export const initLoginApi = (user) => dispatch => {
                     password: ''
                 }
             };
-            res.map((reqUser) => {
+            (res) && res.map((reqUser) => {
                 if (reqUser.name === user.user && reqUser.password === user.password){
                     response.token = md5(reqUser.name)
                     response.user = {
@@ -98,8 +70,3 @@ export const initLoginApi = (user) => dispatch => {
         })
     return true
 }
-
-export const initLoginPromise = (user) => new Promise((resolve, reject) => {
-    resolve(initLoginApi(user));
-    reject(false)
-})

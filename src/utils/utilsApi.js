@@ -27,37 +27,6 @@ export const getAllUsers = () =>
             .then(data => data);
 
 
-
-
-function resolveGetAllUsers() {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(getAllUsers())
-        }, 2000)
-    })
-}
-
-
-
-export const login = (user) => {
-    const response1 = {
-        token: '0000',
-        data: {
-            name: 'data',
-            password: 'joaooo'
-        }
-    };
-
-    return new Promise(resolve => setTimeout(resolve(response1), 1000))
-};
-
-
-
-export const logout = () => {
-    return new Promise(resolve => setTimeout(resolve, 1000));
-};
-
-
 export const initLogin = () =>
     fetch(`${url}/api/user`,
         {
@@ -69,3 +38,24 @@ export const initLogin = () =>
         .catch((error) => {
             console.log('There has been a problem with your fetch operation: ' + error.message + error);
         });
+
+export const addBombeiroVoluntario = (bombeiroVoluntario) =>
+    fetch(`${url}/api/bombeirovoluntario`,
+        {
+            method: 'post',
+            headers,
+            body: JSON.stringify(bombeiroVoluntario)
+        })
+        .then((res) => res.json())
+        .then(data => data)
+        .catch((error) => {
+            console.log('There has been a problem with your fetch operation: ' + error.message + error);
+        });
+
+/*
+*   name: bombeiroVoluntario.name,
+                email: bombeiroVoluntario.email,
+                telefone: bombeiroVoluntario.telefone,
+                endereco: bombeiroVoluntario.endereco,
+                nadador: bombeiroVoluntario.nadador
+* */

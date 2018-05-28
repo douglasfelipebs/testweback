@@ -5,6 +5,7 @@ import importedComponent from 'react-imported-component';
 import NavbarHeader from './NavbarHeader'
 import PanelsComponents from './PanelsComponents'
 import Sobre from './Sobre'
+import FormBombeiroVoluntario from './FormBombeiroVoluntario'
 import Dashboard from './Dashboard'
 import Loading from './Loading'
 import { sessionService } from 'redux-react-session'
@@ -24,6 +25,7 @@ const App = () => {
                 <Route path='/' render={(routerProps) => (
                     <NavbarHeader props={routerProps}/>
                 )} />
+
                 <Switch>
                     <Route exact path='/' render={() => (
                         <PanelsComponents />
@@ -31,8 +33,11 @@ const App = () => {
                     <Route exact path='/Sobre' render={() => (
                         <Sobre />
                     )} />
-                    <Route exact path='/Dashboard' onEnter={sessionService.checkAuth} render={() => (
-                        <Dashboard />
+                    <Route exact path='/Voluntario' render={() => (
+                        <FormBombeiroVoluntario  />
+                    )} />
+                    <Route path='/Dashboard' render={(routerProps) => (
+                        <Dashboard props={routerProps} />
                     )} />
                     <Route component={AsyncNoMatch} />
                 </Switch>

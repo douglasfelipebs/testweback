@@ -13,3 +13,22 @@ export default function capitalize (str = '') {
         ? ''
         : str[0].toUpperCase() + str.slice(1)
 }
+
+/*<div
+                    className={divItens}
+                >
+                    <li>
+                        <ul>
+                            <Link to="/Dashboard/Advices">Primeiros Socorros</Link>
+                        </ul>
+                        <ul>
+                            <Link to="/Dashboard/News">Noticias</Link>
+                        </ul>
+                        <ul>
+                            <Link to="/Dashboard/About">Sobre</Link>
+                        </ul>
+                        <ul>
+                            <Link to="/Dashboard/Voluntary">Voluntários</Link>
+                        </ul>
+                    </li>
+                </div>*/
