@@ -308,5 +308,7 @@ appRoutes.get('/Doacoes', function (req, res) {
     res.send('GET request to Doacoes');
 });
 
+
+appRoutes.listen(port);
 app.listen(port);
 console.log('server started ' + port);
