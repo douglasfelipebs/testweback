@@ -297,9 +297,40 @@ router.route('/dashboard/primeirossocorros/:primeirossocorros_id')
             })
     })
 
-app.get('*', (request, response) => {
 
-    app.use('/api', router);
+app.use('/api', router);
+
+app.get('/', (request, response) => {
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+app.get('/PrimeirosSocorros', (request, response) => {
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+app.get('/Noticias', (request, response) => {
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+app.get('/Sobre', (request, response) => {
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+app.get('/Voluntario', (request, response) => {
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+app.get('/Doacoes', (request, response) => {
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+app.get('/Dashboard', (request, response) => {
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+app.get('/Dashboard/Advices', (request, response) => {
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+app.get('/Dashboard/News', (request, response) => {
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+app.get('/Dashboard/About', (request, response) => {
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+app.get('/Dashboard/Voluntary', (request, response) => {
     response.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
