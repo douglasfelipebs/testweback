@@ -4,6 +4,7 @@ var serveStatic = require('serve-static');
 var app = express();
 var appRoutes = express();
 var bodyParser = require('body-parser');
+var routerRoutes = express.Router();
 var router = express.Router();
 var User = require('./src/models/user');
 var MyApp = require('./src/models/app');
@@ -300,14 +301,15 @@ router.route('/dashboard/primeirossocorros/:primeirossocorros_id')
 
 app.use('/api', router);
 
-appRoutes.get('/PrimeirosSocorros', function (req, res) {
+routerRoutes.get('/PrimeirosSocorros', function (req, res) {
     res.send('GET request to PrimeirosSocorros');
 });
 
-appRoutes.get('/Doacoes', function (req, res) {
+routerRoutes.get('/Doacoes', function (req, res) {
     res.send('GET request to Doacoes');
 });
 
+appRoutes.use('/', routerRoutes);
 
 appRoutes.listen(port);
 app.listen(port);
