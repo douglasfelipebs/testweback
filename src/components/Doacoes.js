@@ -8,7 +8,7 @@ class Doacoes extends Component {
 
     render() {
         return (
-            <div style={{margin: '0 auto'}}>
+            <div>
                 <form action="https://pagseguro.uol.com.br/checkout/v2/donation.html" method="post">
                     <input type="hidden" name="currency" value="BRL" />
                     <input type="hidden" name="receiverEmail" value="bombeirosibirama@ibnet.com.br" />
