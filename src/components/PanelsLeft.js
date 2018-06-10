@@ -1,25 +1,33 @@
 import React, { Component } from 'react'
 import img from 'react-image'
 import { connect } from "react-redux"
+import PropTypes from 'prop-types'
+import { getAppApi } from "../actions/app";
 import { acessoRapido, canvasDiasAcidentes } from './Layout.css'
 
 class PanelsLeft extends Component {
 
     constructor() {
         super()
-
         this.state = {
             x: 100,
             y: 100
         }
+
+        this.setDiasSemAcidenteCanvas = this.setDiasSemAcidenteCanvas.bind(this)
     }
 
     componentDidMount() {
+        this.setDiasSemAcidenteCanvas()
+    }
+
+    setDiasSemAcidenteCanvas() {
         const canvas = this.refs.canvas
         const ctx = canvas.getContext("2d")
         const img = this.refs.image
         let y = this.refs.image.height / 4
         let x = this.refs.image.width / 4
+
         this.setState({x: this.refs.image.width, y: this.refs.image.height})
         img.onload = () => {
             ctx.font = "normal normal bold 75px Franklin"
@@ -28,10 +36,14 @@ class PanelsLeft extends Component {
             ctx.textAlign = "center"
             ctx.textBaseline = 'middle'
             ctx.fillStyle = gradient
-            ctx.fillText(this.props.diasSemAcidentes.toString(), x, y)
         }
     }
 
+    getSnapshotBeforeUpdate(prevProps, prevState) {
+        var ctx = document.getElementById('myCanvas').getContext('2d');
+        ctx.fillText(this.props.propDiasSemAcidentes.toString(), (this.state.x / 4),( this.state.y / 4 ))
+        return null
+    }
 
 
     render() {
@@ -48,8 +60,8 @@ class PanelsLeft extends Component {
                 </div>
                 <div >
                     <a href="/Doacoes"><img src="https://i.imgur.com/YnbS1rw.jpg" alt='Faça sua doação' className={acessoRapido}/></a>
-                    <canvas ref="canvas" width={this.state.y} height={this.state.x} className={canvasDiasAcidentes} />
-                    <img src='https://i.imgur.com/kqWb6sZ.jpg' ref="image" alt='Dias sem acidentes' className={acessoRapido}/>
+                    <canvas ref="canvas" id="myCanvas" contentEditable={222} width={this.state.y} height={this.state.x} className={canvasDiasAcidentes} />
+                    <img src='https://i.imgur.com/kqWb6sZ.jpg' ref="image" alt='Dias sem acidentes'  className={acessoRapido}/>
                 </div>
             </div>
         )
@@ -57,10 +69,17 @@ class PanelsLeft extends Component {
 
 }
 
+
+PanelsLeft.propTypes = {
+    propDiasSemAcidentes: PropTypes.number.isRequired
+}
+
+
 function mapStateToProps (state) {
     return {
-        diasSemAcidentes: 180
+        diasSemAcidentes: state.bombeiros.app.diasSemAcidentes
     }
 }
+
 
 export default connect(mapStateToProps)(PanelsLeft)

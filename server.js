@@ -5,9 +5,13 @@ var app = express();
 var bodyParser = require('body-parser');
 var router = express.Router();
 var User = require('./src/models/user');
+var MyApp = require('./src/models/app');
 var BombeiroVoluntario = require('./src/models/bombeiroVoluntario');
+var Noticia = require('./src/models/noticia');
+var PrimeirosSocorros = require('./src/models/primeirosSocorros');
 var port = process.env.PORT || 5000
 var mongoose   = require('mongoose');
+var schedule = require('node-schedule');
 
 const DATABASE_URI='mongodb://oiler:123456abcde@ds251889.mlab.com:51889/bombeirosibirama'
 
@@ -24,6 +28,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
+//JOB
+
+var j = schedule.scheduleJob({hour: 0, minute: 0}, function(){
+    MyApp.findById('5b1085faa9d9f115c8a006f7', function(err, app) {
+        if (err) {
+            console.error('error, no entry found');
+        }
+        app.diasSemAcidentes += 1;
+        app.save();
+    })
+    console.log('Adicionou 1 aos dias sem acidentes');
+});
+
+
 //develop
 //var cors = require('cors')
 
@@ -31,11 +49,12 @@ app.use(bodyParser.json());
 
 router.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
     // do logging
+
+    console.log('requisicao BODY', req.body)
     console.log('Something is happening.');
-    console.log('requisicao', JSON.stringify(req))
     next(); // make sure we go to the next routes and don't stop here
 });
 
@@ -50,6 +69,7 @@ router.get('/', function(req, res) {
 
         res.json({ message: 'User created!' });
     });*/
+
     res.json({ message: 'hooray! welcome to our api!' });
 })
 
@@ -62,8 +82,7 @@ router.route('/user')
 
         // save the bear and check for errors
         user.save(function(err) {
-            if (err)
-                res.send(err);
+            if (err) return res.status(500).send(err)
 
             res.json({ message: 'User created!' });
         });
@@ -86,6 +105,7 @@ router.route('/bombeirovoluntario')
         voluntario.telefone = req.body.telefone;
         voluntario.endereco = req.body.endereco;
         voluntario.nadador  = req.body.nadador;
+        voluntario.date = req.body.date;
 
         // save the bear and check for errors
         voluntario.save(function(err) {
@@ -104,6 +124,178 @@ router.route('/bombeirovoluntario')
             return res.status(200).send(voluntarios);
         });
     });
+
+router.route('/dashboard/bombeirovoluntario/:bombeiro_id')
+    .delete(function(req, res) {
+
+        BombeiroVoluntario.findByIdAndRemove(req.params.bombeiro_id, (err, bombeiro) => {
+            // As always, handle any potential errors:
+            if (err) return res.status(500).send(err);
+            // We'll create a simple object to send back with a message and the id of the document that was removed
+            // You can really do this however you want, though.
+
+            const response = {
+                message: "Bombeiro voluntário excluído com sucesso",
+                id: bombeiro._id
+            };
+            return res.status(200).send(response);
+        })
+    })
+
+router.route('/dashboard/noticia')
+    .post(function(req, res) {
+        let noticia = new Noticia();
+        noticia.imgUrl       = req.body.imgUrl;
+        noticia.imgDescricao = req.body.imgDescricao;
+        noticia.titulo       = req.body.titulo;
+        noticia.corpoTexto   = req.body.corpoTexto;
+        noticia.favorito     = req.body.favorito;
+        noticia.date         = req.body.date;
+
+        noticia.save(function(err) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'News created!' });
+        });
+
+    })
+    .get(function(req, res) {
+        Noticia.find((err, noticias) => {
+            if (err) return res.status(500).send(err)
+
+            res.header('Access-Control-Allow-Origin', '*')
+            return res.status(200).send(noticias);
+        });
+    })
+
+
+
+router.route('/app').get(function (req, res) {
+    MyApp.find((err, app) => {
+        if (err) return res.status(500).send(err)
+
+        res.header('Access-Control-Allow-Origin', '*')
+        return res.status(200).send(app);
+    });
+})
+
+router.route('/app/:app_id').put(function (req, res) {
+
+    MyApp.findByIdAndUpdate( req.params.app_id,
+
+        // the change to be made. Mongoose will smartly combine your existing
+        // document with this change, which allows for partial updates too
+        req.body,
+
+        // an option that asks mongoose to return the updated version
+        // of the document instead of the pre-updated one.
+        {new: true},
+
+        // the callback function
+        (err, app) => {
+            // Handle any possible database errors
+            if (err) return res.status(500).send(err);
+            return res.send(app);
+        })
+})
+
+
+router.route('/dashboard/noticias/:noticia_id')
+    .delete(function(req, res) {
+
+        Noticia.findByIdAndRemove(req.params.noticia_id, (err, noticia) => {
+            // As always, handle any potential errors:
+            if (err) return res.status(500).send(err);
+            // We'll create a simple object to send back with a message and the id of the document that was removed
+            // You can really do this however you want, though.
+
+            const response = {
+                message: "News successfully deleted",
+                id: noticia._id
+            };
+            return res.status(200).send(response);
+        })
+    })
+    .put(function (req, res) {
+
+        Noticia.findByIdAndUpdate( req.params.noticia_id,
+
+            // the change to be made. Mongoose will smartly combine your existing
+            // document with this change, which allows for partial updates too
+            req.body,
+
+            // an option that asks mongoose to return the updated version
+            // of the document instead of the pre-updated one.
+            {new: true},
+
+            // the callback function
+            (err, noticia) => {
+                // Handle any possible database errors
+                if (err) return res.status(500).send(err);
+                return res.send(noticia);
+            })
+    })
+
+router.route('/dashboard/primeirossocorros')
+    .post(function(req, res) {
+        let primeirosSocorros = new PrimeirosSocorros();
+        primeirosSocorros.titulo   = req.body.titulo;
+        primeirosSocorros.sintomas = req.body.sintomas;
+        primeirosSocorros.reagir   = req.body.reagir;
+        primeirosSocorros.date     = req.body.date;
+
+        primeirosSocorros.save(function(err) {
+            if (err) return res.status(500).send(err)
+
+            res.json({ message: 'Primeiros Socorros criado!' });
+        });
+
+    })
+    .get(function(req, res) {
+        PrimeirosSocorros.find((err, primeirosSocorros) => {
+            if (err) return res.status(500).send(err)
+
+            res.header('Access-Control-Allow-Origin', '*')
+            return res.status(200).send(primeirosSocorros);
+        });
+    })
+
+router.route('/dashboard/primeirossocorros/:primeirossocorros_id')
+    .delete(function(req, res) {
+
+        PrimeirosSocorros.findByIdAndRemove(req.params.primeirossocorros_id, (err, primeirosSocorros) => {
+            // As always, handle any potential errors:
+            if (err) return res.status(500).send(err);
+            // We'll create a simple object to send back with a message and the id of the document that was removed
+            // You can really do this however you want, though.
+
+            const response = {
+                message: "Primeiros Socorros deletado com sucessos",
+                id: primeirosSocorros._id
+            };
+            return res.status(200).send(response);
+        })
+    })
+    .put(function (req, res) {
+
+        PrimeirosSocorros.findByIdAndUpdate(req.params.primeirossocorros_id,
+
+            // the change to be made. Mongoose will smartly combine your existing
+            // document with this change, which allows for partial updates too
+            req.body,
+
+            // an option that asks mongoose to return the updated version
+            // of the document instead of the pre-updated one.
+            {new: true},
+
+            // the callback function
+            (err, primeirosSocorros) => {
+                // Handle any possible database errors
+                if (err) return res.status(500).send(err);
+                return res.send(primeirosSocorros);
+            })
+    })
 
 app.use('/api', router);
 

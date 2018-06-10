@@ -130,12 +130,14 @@ class FormBombeiroVoluntario extends Component {
         if ((this.getValidationStateNomeCompleto() && this.getValidationStateEmail() &&
             this.getValidationStatePhone() && this.getValidationStateEndereco()) === 'success' ){
 
+            var date = new Date();
             let voluntario = {
                 name: this.state.nomeCompleto,
                 email: this.state.email,
                 telefone: this.state.telefoneContato,
                 endereco: this.state.endereco,
-                nadador: this.state.sabeNadar
+                nadador: this.state.sabeNadar,
+                date: date
             }
 
             this.props.addVoluntario(voluntario)

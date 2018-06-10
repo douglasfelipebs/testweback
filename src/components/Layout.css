@@ -28,6 +28,32 @@
     margin-left: 2%;
 }
 
+
+.thumbnail {
+    position: relative;
+}
+
+.centeredDivDiasSemAcidentes {
+    position: absolute;
+    top: 84%;
+    left: 28.5%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    color: rgb(150,10,0);
+}
+
+.caption {
+    position: absolute;
+    top: 45%;
+    left: 25%;
+    width: 100%;
+}
+
+.caption > strong {
+    font-size: 40px;
+    color: rgb(150,10,0);
+}
+
 .panelsNoticias {
     width: 60%;
     margin-right: 2%;
@@ -71,6 +97,10 @@
     height: 200px;
     margin: 0 5px 10px;
     cursor: pointer;
+}
+
+.divImageCenter {
+    display: flex;
 }
 
 .canvasDiasAcidentes {
@@ -159,7 +189,21 @@
 }
 
 .modalLoginOpacity {
-    opacity: 0.2;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.errorMessage {
+    float: left;
+    display: flex;
+    color: rgb(150,10,0);
+}
+
+.fetchingDiv {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: block;
+    z-index: 100;
 }
 
 /* FORM BOMBEIRO VOLUNTARIO */
@@ -230,11 +274,71 @@
 
 .bodySlide {
     background: rgba(0, 0, 0, 0.3);
+    
 }
 
 .iconsAwesome {
     margin-right: 3%;
     margin-left: 1%;
+}
+
+/* DASHBOARD GERAL */
+.formDiasSemAcidentes {
+    margin: 0 auto;
+    width: 20%;
+}
+
+.divTotal {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.divDashboardVoluntarios {
+    height: 450px;
+    width: 70%;
+    margin: 0 auto;
+}
+
+/* DASHBOARD NOTICIA */
+.divDashboardNoticiaGeral {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.divDashboardNoticiaButtons {
+    padding: 0;
+    height: 25px;
+    margin: 0 auto 1%;
+}
+
+.centerAll {
+    margin: 0 auto;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.centerStar {
+    margin-left: 50%;
+}
+
+.plusToCross {
+    transform: rotate(45deg);
+}
+
+/* Modal Primeiros Socorros */
+
+.buttonModalSintomasDescricao {
+    margin: 1%;
 }
 
 @media only screen and (max-width: 600px) {
@@ -275,6 +379,18 @@
 
     .iconBurguer {
         top: 1%;
-        position: relative;
+    }
+
+    .navBarBombeirosIbirama {
+        margin-left: 10%;
+    }
+
+    .divDashboardNoticiaButtons {
+        margin: 0 auto 5%;
+    }
+
+    .divDashboardVoluntarios {
+        width: 96%;
     }
 }
+

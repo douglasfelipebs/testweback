@@ -3,9 +3,10 @@ import * as sessionApi from '../utils/utilsApi';
 import md5 from 'md5'
 import {
     LOGIN_INIT,
-    LOGOUT_USER
+    LOGOUT_USER,
+    FETCHING_LOGIN,
+    ERROR_MESSAGE
 } from "./types"
-
 
 
 export const dispatchLogout = (response) => ({
@@ -31,12 +32,33 @@ export const logoutApi = () => dispatch => {
     }
 }
 
+export const dispatchFetchLogin = (bVal) => ({
+    type: FETCHING_LOGIN,
+    val: bVal
+})
+
+export const dispatchErrorMessage = (sErrorMessage) => ({
+    type: ERROR_MESSAGE,
+    errorMessage: sErrorMessage
+})
+
+export const actionFetchLogin = (bVal) => dispatch => {
+    dispatch(dispatchFetchLogin(bVal))
+}
+export const actionErrorMessage = (sErrorMessage) => dispatch => {
+    dispatch(dispatchErrorMessage(sErrorMessage))
+}
+
 export const dispatchLogin = (response) => ({
     type: LOGIN_INIT,
     response
 })
 
 export const initLoginApi = (user) => dispatch => {
+
+    dispatch(dispatchFetchLogin(true))
+    dispatch(dispatchErrorMessage(''))
+
     sessionApi
         .initLogin()
         .then(res => {
@@ -63,9 +85,15 @@ export const initLoginApi = (user) => dispatch => {
                             sessionService.saveUser(reqUser).catch(err => console.log(err))
                         }).catch(err => console.log(err))
                     response.loggedIn = true;
-                    console.log(response)
                 }
             })
+
+            dispatch(dispatchFetchLogin(false))
+
+            if (!response.loggedIn){
+                dispatch(dispatchErrorMessage('Algo de errado aconteceu, verifique suas credenciais'))
+            }
+
             dispatch(dispatchLogin(response))
         })
     return true

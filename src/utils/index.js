@@ -1,4 +1,4 @@
-export default function removeAcento (text) {
+export function removeAcento (text) {
     text = text.replace(new RegExp('[ÁÀÂÃ]','gi'), 'a');
     text = text.replace(new RegExp('[ÉÈÊ]','gi'), 'e');
     text = text.replace(new RegExp('[ÍÌÎ]','gi'), 'i');
@@ -6,13 +6,14 @@ export default function removeAcento (text) {
     text = text.replace(new RegExp('[ÚÙÛ]','gi'), 'u');
     text = text.replace(new RegExp('[Ç]','gi'), 'c');
     return text;
-}
+};
 
-export default function capitalize (str = '') {
+export function capitalize (str = '') {
     return typeof str !== 'string'
         ? ''
         : str[0].toUpperCase() + str.slice(1)
-}
+};
+
 
 /*<div
                     className={divItens}

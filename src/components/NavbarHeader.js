@@ -4,8 +4,8 @@ import { Navbar, NavItem, Nav, NavDropdown, MenuItem, Modal, Button,
 import  swal  from 'sweetalert'
 import { connect } from 'react-redux'
 import Loading from './Loading'
-import { navBar, modalLoginOpacity } from './Layout.css'
-import {initLoginApi, logoutApi} from "../actions/session"
+import { navBar, modalLoginOpacity, errorMessage, fetchingDiv, navBarBombeirosIbirama } from './Layout.css'
+import {initLoginApi, logoutApi, actionErrorMessage, actionFetchLogin} from "../actions/session"
 
 class NavbarHeader extends Component {
 
@@ -32,6 +32,8 @@ class NavbarHeader extends Component {
 
     handleOnClickLogin = (e) => {
         e.preventDefault()
+        this.props.setErrorMessage('')
+        this.props.fetchingLogin(false)
         this.setState({
             loadingOpen: false,
             ModalLogin: {
@@ -43,16 +45,21 @@ class NavbarHeader extends Component {
 
     handleOnClickLogout = (e) => {
         e.preventDefault()
-        debugger;
-
         if (this.props.props.history.location.pathname.toLowerCase().indexOf('dashboard'))
             this.props.props.history.push('/')
 
-        const { logout } = this.props
-        logout();
+        this.setState({
+            ModalLogin: {
+                user: '',
+                password: ''
+            }
+        })
+        this.props.logout();
     }
 
     handleCloseModalLogin() {
+        this.props.setErrorMessage('')
+        this.props.fetchingLogin(false)
         this.setState({
             loadingOpen: false,
             ModalLogin: {
@@ -67,7 +74,7 @@ class NavbarHeader extends Component {
 
         this.setState({loadingOpen: true})
         let bCorreto = false;
-        if ((this.getValidationStatePassword() && this.getValidationStatePassword()) === 'success') {
+        if ((this.getValidationStatePassword() && this.getValidationStateUser()) === 'success') {
             const user = {
                 user: this.state.ModalLogin.user,
                 password: this.state.ModalLogin.password
@@ -79,8 +86,6 @@ class NavbarHeader extends Component {
 
         if (!bCorreto) {
             swal("Algo de errado aconteceu", "Verifique seu login e senha!", "error");
-        } else {
-            this.handleCloseModalLogin()
         }
 
     }
@@ -104,7 +109,6 @@ class NavbarHeader extends Component {
     }
 
     limpar(bOpen) {
-        console.log('Props', this.props)
         this.setState({
             ...this.state,
             ModalLogin: {
@@ -138,7 +142,7 @@ class NavbarHeader extends Component {
                 <Navbar>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <a href="/">Bombeiros Ibirama</a>
+                            <a className={navBarBombeirosIbirama} href="/">Bombeiros Ibirama</a>
                         </Navbar.Brand>
                     </Navbar.Header>
                     <Nav pullRight>
@@ -190,13 +194,14 @@ class NavbarHeader extends Component {
                     </Nav>
                 </Navbar>
                 <Modal
-                    show={this.state.ModalLogin.open}
+                    show={this.state.ModalLogin.open && !this.props.logging}
                     onHide={this.handleCloseModalLogin}
-                    className={(this.state.loadingOpen) && modalLoginOpacity}
+                    className={(this.props.isFetchingLogin) && modalLoginOpacity}
                     onEntered={() => {this.inputUser.focus()} }
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>Login</Modal.Title>
+                        <p style={{marginTop: '2%'}}>O login é realizado somente para bombeiros autorizados.</p>
                     </Modal.Header>
                     <Modal.Body>
                         <form>
@@ -209,6 +214,7 @@ class NavbarHeader extends Component {
                                     value={this.state.ModalLogin.user}
                                     placeholder='Nome de Usuário'
                                     onChange={this.handleChangeUser}
+                                    disabled={this.props.isFetchingLogin}
                                     inputRef={ ref => this.inputUser = ref}
                                 />
                                 <HelpBlock>Mínimo de 4 caracteres</HelpBlock>
@@ -219,6 +225,7 @@ class NavbarHeader extends Component {
                                 <ControlLabel>Senha</ControlLabel>
                                 <FormControl
                                     type='password'
+                                    disabled={this.props.isFetchingLogin}
                                     value={this.state.ModalLogin.password}
                                     placeholder='Senha'
                                     onChange={this.handleChangePassword}
@@ -227,9 +234,24 @@ class NavbarHeader extends Component {
                         </form>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button type="submit" onClick={this.handleConfirmModalLogin}>Confirmar</Button>
-                        <Button onClick={this.handleCloseModalLogin}>Fechar</Button>
+                        {(this.props.errorMessage) && <div className={errorMessage}>{this.props.errorMessage}</div>}
+                        <Button
+                            type="submit"
+                            onClick={this.handleConfirmModalLogin}
+                            disabled={this.props.isFetchingLogin}
+                        >Confirmar</Button>
+                        <Button
+                            onClick={this.handleCloseModalLogin}
+                        >Fechar</Button>
                     </Modal.Footer>
+                    {
+                        (this.props.isFetchingLogin) &&
+                            <div
+                                className={fetchingDiv}
+                            >
+                                <Loading/>
+                            </div>
+                    }
                 </Modal>
             </div>
         )
@@ -241,13 +263,17 @@ class NavbarHeader extends Component {
 function mapStateToProps (state) {
     return {
         logging: state.session.authenticated,
+        isFetchingLogin: state.bombeiros.isFetchingLogin,
+        errorMessage: state.bombeiros.errorMessage
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        login  : (user) => dispatch(initLoginApi(user)),
-        logout : () => dispatch(logoutApi())
+        login          : (user) => dispatch(initLoginApi(user)),
+        logout         : () => dispatch(logoutApi()),
+        fetchingLogin  : () => dispatch(actionFetchLogin()),
+        setErrorMessage: () => dispatch(actionErrorMessage())
     };
 };
 

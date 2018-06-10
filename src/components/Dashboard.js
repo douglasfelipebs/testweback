@@ -1,11 +1,18 @@
 import React, { Component } from 'react'
 import { Route, Switch, Link } from 'react-router-dom'
+import { sessionService } from 'redux-react-session';
 import { slide as Menu } from 'react-burger-menu'
 import * as FontAwesome from 'react-icons/lib/fa'
+import DashboardGeral from './DashboardGeral'
+import DashboardBombeirosVoluntarios from './DashboardBombeirosVoluntarios'
+import DashboardNoticias from './DashboardNoticias'
+import DashboardPrimeirosSocorros from './DashboardPrimeirosSocorros'
+import NoMatch from './NoMatch'
 import { divDashboard, divItens, iconBurguer, itensListSlide, slideClass,
          iconsAwesome, bodySlide } from './Layout.css'
 
 import { connect } from 'react-redux'
+import {getAppApi} from "../actions/app";
 
 class Dashboard extends Component {
 
@@ -22,6 +29,10 @@ class Dashboard extends Component {
             menuOpen: false
         }
 
+    }
+
+    componentDidMount() {
+        this.props.getDiasSemAcidentes()
     }
 
     getItens() {
@@ -53,9 +64,17 @@ class Dashboard extends Component {
         return items
     }
 
+    getSnapshotBeforeUpdate(prevProps, prevState){
+        if (!this.props.isLoggedIn)
+            this.props.props.history.push('/')
+
+        return null
+    }
+
 
     render() {
         let items = this.getItens()
+
 
         return(
             <div
@@ -76,7 +95,21 @@ class Dashboard extends Component {
                     {items}
                 </Menu>
                 <Switch>
-                    <Route exact path="Dashboard" />
+                    <Route exact path="/Dashboard" render={() => (
+                        <DashboardGeral propDiasSemAcidentes={this.props.diasSemAcidentes}/>
+                    )} />
+                    <Route exact path="/Dashboard/Voluntary" render={() => (
+                        <DashboardBombeirosVoluntarios />
+                    )} />
+                    <Route exact path="/Dashboard/News" render={() => (
+                        <DashboardNoticias />
+                    )} />
+                    <Route exact path="/Dashboard/Advices" render={() => (
+                        <DashboardPrimeirosSocorros routerProps={this.props.props} />
+                    )} />
+                    <Route render={() => (
+                        <NoMatch/>
+                    )} />
                 </Switch>
             </div>
         )
@@ -87,8 +120,15 @@ class Dashboard extends Component {
 
 function mapStateToProps (state) {
     return {
-        logging: state.session.authenticated,
+        diasSemAcidentes: state.bombeiros.app.diasSemAcidentes,
+        isLoggedIn      : state.session.authenticated
     }
 }
 
-export default connect(mapStateToProps, null)(Dashboard)
+function mapDispatchToProps(dispatch) {
+    return {
+        getDiasSemAcidentes: () => dispatch(getAppApi())
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
