@@ -69,9 +69,9 @@ const App = () => {
                     )} />
                     <Route exact path='/Sobre' component={AsyncSobre}/>
                     <Route exact path='/Voluntario'  component={AsyncFormBombeiroVoluntario}/>
-                    <Route path='/Noticias'  component={AsyncConsultaNoticias}/>
-                    <Route path='/PrimeirosSocorros'  component={AsyncConsultaPrimeirosSocorros}/>
-                    <Route path='/Doacoes'  component={AsyncPagSeguro}/>
+                    <Route exact path='/Noticias'  component={AsyncConsultaNoticias}/>
+                    <Route exact path='/PrimeirosSocorros'  component={AsyncConsultaPrimeirosSocorros}/>
+                    <Route exact path='/Doacoes'  component={AsyncPagSeguro}/>
                     <Route path='/Dashboard' render={(routerProps) => (
                         <Dashboard props={routerProps} />
                     )} />

@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var serveStatic = require('serve-static');
 var app = express();
+var appRoutes = express();
 var bodyParser = require('body-parser');
 var router = express.Router();
 var User = require('./src/models/user');
@@ -23,10 +24,10 @@ mongoose.set('debug', true);
 
 db.on('error', console.error.bind(console,'# Mongo DB: connection error:'));
 
+appRoutes.use(serveStatic(path.join(__dirname, 'dist')));
 app.use(serveStatic(path.join(__dirname, 'dist')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 
 //JOB
 
@@ -298,6 +299,14 @@ router.route('/dashboard/primeirossocorros/:primeirossocorros_id')
     })
 
 app.use('/api', router);
+
+appRoutes.get('/PrimeirosSocorros', function (req, res) {
+    res.send('GET request to PrimeirosSocorros');
+});
+
+appRoutes.get('/Doacoes', function (req, res) {
+    res.send('GET request to Doacoes');
+});
 
 app.listen(port);
 console.log('server started ' + port);
