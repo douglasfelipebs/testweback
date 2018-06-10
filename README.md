@@ -6,7 +6,7 @@ Esse é um projeto filantrópico para auxiliar os bombeiros de ibirama a divulga
 To get started developing right away:
 
 * Install the app and open the development mode
-   - `git clone https://github.com/RafilxTenfen/testweback.git devBombeiros`
+   - `git clone -b DEVrafilx09062018 https://github.com/RafilxTenfen/testweback.git devBombeiros`
    - `cd devBombeiros`
    - `yarn install`
    - `yarn dev`
