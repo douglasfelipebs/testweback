@@ -1,5 +1,4 @@
-const url = 'http://localhost:5000'; //|| process.env.APP_URL + ':' + process.env.PORT;
-import axios from 'axios'
+const url = 'https://testewebpackrafilx.herokuapp.com' || process.env.APP_URL + ':' + process.env.PORT;
 
 let token = localStorage.token
 
