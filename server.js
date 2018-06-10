@@ -27,9 +27,6 @@ app.use(serveStatic(path.join(__dirname, 'dist')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get('*', (request, response) => {
-    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
 
 //JOB
 
@@ -300,7 +297,11 @@ router.route('/dashboard/primeirossocorros/:primeirossocorros_id')
             })
     })
 
-app.use('/api', router);
+app.get('*', (request, response) => {
+
+    app.use('/api', router);
+    response.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 app.listen(port);
 console.log('server started ' + port);
