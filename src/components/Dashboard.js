@@ -51,10 +51,6 @@ class Dashboard extends Component {
                 <FontAwesome.FaClone className={iconsAwesome}/>
                 <Link to="/Dashboard/News">Noticias</Link>
             </div>,
-            <div key='4'>
-                <FontAwesome.FaPencil className={iconsAwesome}/>
-                <Link to="/Dashboard/About">Sobre</Link>
-            </div>,
             <div key='5'>
                 <FontAwesome.FaPiedPiperAlt className={iconsAwesome}/>
                 <Link to="/Dashboard/Voluntary">Voluntários</Link>
