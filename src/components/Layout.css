@@ -17,6 +17,15 @@
     width: 100%;
 }
 
+.quandoChamar{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
 .AllPanels {
     width: 100%;
     height: 100%;
@@ -116,6 +125,12 @@
 .content{
     display: flex;
     flex-direction: row;
+}
+
+.contentSobre{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .indice{
@@ -339,6 +354,23 @@
 
 .buttonModalSintomasDescricao {
     margin: 1%;
+}
+
+/* Página Doações */
+
+.botaoPag{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.textoDoacao{
+    width: 70%;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: justify;
 }
 
 @media only screen and (max-width: 600px) {
